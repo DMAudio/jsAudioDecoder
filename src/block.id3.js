@@ -2,7 +2,7 @@
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:33:19 
  * @Last Modified by: Kitagawa.Kenta
- * @Last Modified time: 2017-06-24 15:46:57
+ * @Last Modified time: 2017-06-24 16:27:27
  */
 function id3_unknlt(data, dv, offset) {
     let length = 0;
@@ -24,9 +24,9 @@ function id3_text(data, dv, offset, size) {
     //    0x01   UTF-16         Terminated with 0x00 0x00, with BOM.
     //    0x02   UTF-16BE       Terminated with 0x00 0x00, without BOM.
     //    0x03   UTF-8          Terminated with $00.
-    //  Attention! 0x00 means using the default codec on that operating system
-    //  On Simplified Chinese Windows : GB-2312, on English Windows : ISO-8859-1
-    //  On Linux : utf-8
+    //  Attention! 0x00 may also means using the default codec on that operating system
+    //    e.g.  On Simplified Chinese Windows : GB-2312, on English Windows : ISO-8859-1
+    //          On Linux : utf-8
     let itemEncode = dv.getUint8(offset);
     let itemContent = int2Str(new Uint8Array(data, offset + 1, size - 1, true), itemEncode);
     return itemContent;
@@ -67,7 +67,7 @@ function id3_pic(data, dv, offset, size) {
     let blob = new Blob([itemData], { 'type': itemMime });
     let imgurl = URL.createObjectURL(blob);
     let result = {
-        Offset: offset,
+        //Offset: offset,
         Encode: itemEncode,
         Mime: itemMime,
         PicType: itemPicType,
@@ -124,6 +124,7 @@ function id3(data, dv, offset, length) {
         let itemSize = dv.getUint32(tagOffset + 4);
         let itemFlags = int2Str(new Uint8Array(data, tagOffset + 8, 2));
         let itemHeaderSize = 10;
+        
         //================================
         if (itemName.indexOf('T') === 0) {
             let itemContent = id3_text(data, dv, tagOffset + itemHeaderSize, itemSize);
@@ -131,11 +132,15 @@ function id3(data, dv, offset, length) {
                 if (!chunk.info.TXXX) chunk.info.TXXX = [];
                 chunk.info.TXXX.push(itemContent);
             } else { chunk.info[itemName] = itemContent; }
-        }
+        }else
         //================================
         if (itemName == 'APIC') {
             if (!chunk.info.APIC) chunk.info.APIC = [];
             chunk.info.APIC.push(id3_pic(data, dv, tagOffset + itemHeaderSize, itemSize));
+        }else
+        //================================
+        {
+            chunk.info[itemName] = "unsupported"
         }
         tagOffset += itemHeaderSize + itemSize;
     }

@@ -59,7 +59,7 @@
                 let fr = new FileReader();
                 fr.onload = function () {
                     let result = WAV_Decoder(fr.result)
-                    result.id3.info.info.APIC.forEach(function (element) {
+                    result.id3.info.APIC.forEach(function (element) {
                         $('#covers').append(`<img src="${element.imgurl}" />`);
                     }, this);
                     console.log(obj2string(result));
