@@ -13,6 +13,7 @@
     <script src="../src/lib/string.js"></script>
     <script src="../src/block.id3.js"></script>
     <script src="../src/wav.js"></script>
+    <script src="../src/flac.js"></script>
 </head>
 
 <body>
@@ -58,10 +59,21 @@
                 <td>${element.lastModifiedDate}</td></tr>`);
                 let fr = new FileReader();
                 fr.onload = function () {
-                    let result = WAV_Decoder(fr.result)
-                    result.id3.info.APIC.forEach(function (element) {
-                        $('#covers').append(`<img src="${element.imgurl}" />`);
-                    }, this);
+                    let result;
+                    let Format = int2Str(new Uint8Array(fr.result, 0, 4));
+                    if (Format == 'RIFF') {
+                        result = WAV_Decoder(fr.result);
+                        result.id3.info.APIC.forEach(function (element) {
+                            $('#covers').append(`<img src="${element.imgurl}" />`);
+                        }, this);
+                    } else if (Format == 'fLaC') {
+                        result = FLAC_Decoder(fr.result);
+                        result.Metadata.forEach(function (element) {
+                            if(element.type == 'PICTURE'){
+                                $('#covers').append(`<img src="${element.info.imgurl}" />`);
+                            }
+                        }, this);
+                    }
                     console.log(obj2string(result));
                 }
                 fr.readAsArrayBuffer(element);

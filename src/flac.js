@@ -2,7 +2,7 @@
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:26:05 
  * @Last Modified by: Kitagawa.Kenta
- * @Last Modified time: 2017-06-24 14:30:59
+ * @Last Modified time: 2017-06-24 17:00:35
  */
 
 function FLAC_MB_Type(bit) {
@@ -101,19 +101,19 @@ function FLAC_Decoder(data){
         let block = {};
         let blockOffset = offset;
         let blockDataOffset = blockOffset + 4;
-        block.type = MB_Type(pickBits(dv.getUint8(blockOffset), 0, 6));
+        block.type = FLAC_MB_Type(pickBits(dv.getUint8(blockOffset), 0, 6));
         block.offset = blockOffset;
         block.dataOffset = blockDataOffset;
         block.dataSize = connectBits(new Uint8Array(data, blockOffset + 1, 3));
         switch (block.type) {
             case 'STREAMINFO':
-                block.info = MBD_STREAMINFO(data, dv, block.dataOffset, block.dataSize);
+                block.info = FLAC_MBD_STREAMINFO(data, dv, block.dataOffset, block.dataSize);
                 break;
             case 'PICTURE':
-                block.info = MBD_PICTURE(data, dv, block.dataOffset, block.dataSize);
+                block.info = FLAC_MBD_PICTURE(data, dv, block.dataOffset, block.dataSize);
                 break;
             case 'VORBIS_COMMEN':
-                block.info = MBD_VORBIS_COMMEN(data, dv, block.dataOffset, block.dataSize);
+                block.info = FLAC_MBD_VORBIS_COMMEN(data, dv, block.dataOffset, block.dataSize);
                 break;
         }
 
