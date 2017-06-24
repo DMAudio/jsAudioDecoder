@@ -1,0 +1,74 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <title></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <script src="http://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./obj2string.js"></script>
+    <script src="../src/lib/bits.js"></script>
+    <script src="../src/lib/string.js"></script>
+    <script src="../src/block.id3.js"></script>
+    <script src="../src/wav.js"></script>
+</head>
+
+<body>
+    <div id="dropzone">
+        <center>
+            <h1>拖拽文件至此</h1>
+            <small>文件信息将输出至在浏览器控制台</small>
+        </center>
+
+    </div>
+    <table class="filelist" id="filelist">
+        <thead>
+            <tr>
+                <th>File Name</th>
+                <th>File Type</th>
+                <th>File Size</th>
+                <th>lastModifiedDate</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+    <div id="covers"></div>
+</body>
+<script type="text/javascript">
+    $('#dropzone')
+        .on('dragover', function (ev) {
+            $(this).addClass('over');
+            return false;
+        })
+        .on('dragleave', function (ev) {
+            $(this).removeClass('over');
+            return false;
+        })
+        .on('drop', function (ev) {
+            $(this).removeClass('over');
+            $('#filelist>tbody').html('');
+            for (element of ev.originalEvent.dataTransfer.files) {
+                $('#filelist>tbody').append(`<tr>
+                <td>${element.name}</td>
+                <td>${element.type}</td>   
+                <td>${element.size}</td>
+                <td>${element.lastModifiedDate}</td></tr>`);
+                let fr = new FileReader();
+                fr.onload = function () {
+                    let result = WAV_Decoder(fr.result)
+                    result.id3.info.info.APIC.forEach(function (element) {
+                        $('#covers').append(`<img src="${element.imgurl}" />`);
+                    }, this);
+                    console.log(obj2string(result));
+                }
+                fr.readAsArrayBuffer(element);
+            };
+            return false;
+        });
+
+</script>
+
+</html>

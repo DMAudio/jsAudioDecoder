@@ -1,0 +1,25 @@
+#dropzone {
+    width: 100%;
+    height: 300px;
+    border: 2px dashed gray;
+}
+
+#dropzone center {
+    position: relative;
+    top: 30%;
+    text-align: center;
+}
+
+#dropzone.over {
+    border: 2px dashed orange;
+}
+
+#filelist {
+    width: 100%;
+}
+
+#filelist,
+#filelist td,
+#filelist th {
+    border: 1px solid black;
+}
