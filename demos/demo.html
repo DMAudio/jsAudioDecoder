@@ -68,7 +68,7 @@
                         }, this);
                     } else if (Format == 'fLaC') {
                         result = FLAC_Decoder(fr.result);
-                        result.Metadata.forEach(function (element) {
+                        result.MetaBlocks.forEach(function (element) {
                             if(element.type == 'PICTURE'){
                                 $('#covers').append(`<img src="${element.info.imgurl}" />`);
                             }

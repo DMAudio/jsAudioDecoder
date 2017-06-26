@@ -1,15 +1,15 @@
 /*
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:23:41 
- * @Last Modified by:   Kitagawa.Kenta 
- * @Last Modified time: 2017-06-24 14:23:41 
+ * @Last Modified by: Kitagawa.Kenta
+ * @Last Modified time: 2017-06-26 13:46:31
  */
 
 /**
  * 
  * 
  * @param {any} object 
- * @param {any} indent_length 
+ * @param {number} indent_length 
  * @returns 
  */
 function obj2string(object, indent_length) {

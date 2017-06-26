@@ -2,7 +2,7 @@
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:33:19 
  * @Last Modified by: Kitagawa.Kenta
- * @Last Modified time: 2017-06-24 16:27:27
+ * @Last Modified time: 2017-06-26 14:09:43
  */
 function id3_unknlt(data, dv, offset) {
     let length = 0;
@@ -31,6 +31,32 @@ function id3_text(data, dv, offset, size) {
     let itemContent = int2Str(new Uint8Array(data, offset + 1, size - 1, true), itemEncode);
     return itemContent;
 }
+function id3_pic_type(t) {
+    switch (t) {
+        case 0: return 'Other';
+        case 1: return '32x32 pixels \'file icon\' (PNG only)';
+        case 2: return 'Other file icon';
+        case 3: return 'Cover(front)';
+        case 4: return 'Cover(back)';
+        case 5: return 'Leaflet page';
+        case 6: return 'Media(e.g.label side of CD)';
+        case 7: return 'Lead artist/ lead performer/ soloist';
+        case 8: return 'Artist / performer';
+        case 9: return 'Conductor';
+        case 10: return 'Band / Orchestra';
+        case 11: return 'Composer';
+        case 12: return 'Lyricist / text writer';
+        case 13: return 'Recording Location';
+        case 14: return 'During recording';
+        case 15: return 'During performance';
+        case 16: return 'Movie / video screen capture';
+        case 17: return 'A bright coloured fish';
+        case 18: return 'Illustration';
+        case 19: return 'Band / artist logotype';
+        case 20: return 'Publisher / Studio logotype';
+        default: return 'reserved';
+    }
+}
 function id3_pic(data, dv, offset, size) {
     /*
     Text encoding   $xx
@@ -52,8 +78,8 @@ function id3_pic(data, dv, offset, size) {
 
     //Picture type
     let itemPicType = dv.getUint8(offset);
+    let itemPicTypeDes = id3_pic_type(itemPicType);
     offset += 1;
-
     //Description
     //Length unknow
     //End With 0x00
@@ -71,6 +97,7 @@ function id3_pic(data, dv, offset, size) {
         Encode: itemEncode,
         Mime: itemMime,
         PicType: itemPicType,
+        PicTypeDes: itemPicTypeDes,
         Des: itemDes,
         Size: size,
         RealSize: itemRealSize,
