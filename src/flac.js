@@ -2,7 +2,7 @@
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:26:05 
  * @Last Modified by: Kitagawa.Kenta
- * @Last Modified time: 2017-06-24 17:00:35
+ * @Last Modified time: 2017-06-26 12:43:19
  */
 
 function FLAC_MB_Type(bit) {
@@ -27,10 +27,10 @@ function FLAC_MBD_STREAMINFO(data, dv, offset, length) {
     let bits = connectBits([
         pickBits(dv.getUint8(offset + 12), 0, 0),
         pickBits(dv.getUint8(offset + 13), 4, 7)
-    ]) + 1;
+    ],4) + 1;
     //查明相差的240个样本是啥
     let samples = pickBits(connectBits(new Uint8Array(data, offset + 13, 5)), 0, 35);
-    let md5 = short2hex(new Uint8Array(data, offset + 18, 128 / 8));
+    let md5 = int2char(new Uint8Array(data, offset + 18, 128 / 8));
     return {
         BlockSizeMin, BlockSizeMax,
         FrameSizeMin, FrameSizeMax,
@@ -86,7 +86,7 @@ function FLAC_MBD_VORBIS_COMMEN(data, dv, offset, length) {
     }
 }
 
-function FLAC_Decoder(data){
+function FLAC_Decoder(data) {
     let flacInfo = {};
     let offset = 0;
     let dv = new DataView(data);
@@ -101,6 +101,7 @@ function FLAC_Decoder(data){
         let block = {};
         let blockOffset = offset;
         let blockDataOffset = blockOffset + 4;
+        let isLast = pickBit(dv.getUint8(offset), 7);
         block.type = FLAC_MB_Type(pickBits(dv.getUint8(blockOffset), 0, 6));
         block.offset = blockOffset;
         block.dataOffset = blockDataOffset;
@@ -118,8 +119,8 @@ function FLAC_Decoder(data){
         }
 
         flacInfo.Metadata.push(block);
-        if (pickBit(dv.getUint8(offset), 7)) break;
         offset += 4 + block.dataSize;
+        if (isLast) break;
     }
     return flacInfo;
 }
