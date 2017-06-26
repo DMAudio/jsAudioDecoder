@@ -29,7 +29,7 @@ function int2Str(bytes, encode = 0) {
  * @param {any} bytes 
  * @returns 
  */
-function short2hex(bytes) {
+function int2char(bytes) {
     let result = "";
     bytes.forEach(function (element) {
         result += pickBits(element, 4, 7).toString(16);

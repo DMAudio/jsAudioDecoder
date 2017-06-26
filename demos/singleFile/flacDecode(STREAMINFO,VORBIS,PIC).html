@@ -111,7 +111,7 @@
         }
         return trim(itemContent);
     }
-    function short2hex(bytes) {
+    function int2char(bytes) {
         let result = "";
         bytes.forEach(function (element) {
             result += pickBits(element, 4, 7).toString(16);
@@ -191,7 +191,7 @@
         ]) + 1;
         //查明相差的240个样本是啥
         let samples = pickBits(connectBits(new Uint8Array(data, offset + 13, 5)), 0, 35);
-        let md5 = short2hex(new Uint8Array(data, offset + 18, 128 / 8));
+        let md5 = int2char(new Uint8Array(data, offset + 18, 128 / 8));
         return {
             BlockSizeMin, BlockSizeMax,
             FrameSizeMin, FrameSizeMax,
