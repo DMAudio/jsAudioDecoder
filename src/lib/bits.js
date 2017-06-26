@@ -2,7 +2,7 @@
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:14:18 
  * @Last Modified by: Kitagawa.Kenta
- * @Last Modified time: 2017-06-24 14:21:58
+ * @Last Modified time: 2017-06-25 19:11:07
  */
 
 /**
@@ -23,9 +23,9 @@ function isInteger(obj) {
  * @returns 
  */
 function makeBits(start, length) {
-    let zeros = Array(start).fill(0).join('');
-    let ones = Array(length).fill(1).join('');
-    return parseInt(ones + zeros, 2);
+    let zeros = new Array(start).fill(0).join('');
+    let ones = new Array(length).fill(1).join('');
+    return Number('0b' + ones + zeros);
 }
 
 /**
