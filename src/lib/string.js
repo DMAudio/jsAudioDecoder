@@ -2,31 +2,30 @@
  * @Author: Kitagawa.Kenta 
  * @Date: 2017-06-24 14:22:53 
  * @Last Modified by: Kitagawa.Kenta
- * @Last Modified time: 2017-06-24 14:24:10
+ * @Last Modified time: 2017-06-26 13:59:31
  */
 /**
  * 
  * 
- * @param {any} bytes 
+ * @param {array} bytes 
  * @param {number} [encode=0] 
  * @returns 
  */
 function int2Str(bytes, encode = 0) {
     if (encode === 0x01) {
-        itemContent = new TextDecoder('UTF-16').decode(bytes);
+        return trim(new TextDecoder('UTF-16').decode(bytes));
     } else if (encode === 0x02) {
-        itemContent = new TextDecoder('UTF-16BE').decode(bytes);
+        return trim(new TextDecoder('UTF-16BE').decode(bytes));
     } else if (encode === 0x03) {
-        itemContent = new TextDecoder('UTF-8').decode(bytes);
+        return trim(new TextDecoder('UTF-8').decode(bytes));
     } else {
-        itemContent = new TextDecoder('ISO-8859-1').decode(bytes);
+        return trim(new TextDecoder('ISO-8859-1').decode(bytes));
     }
-    return trim(itemContent);
 }
 /**
  * 
  * 
- * @param {any} bytes 
+ * @param {array} bytes 
  * @returns 
  */
 function int2char(bytes) {
@@ -40,16 +39,10 @@ function int2char(bytes) {
 /**
  * 
  * 
- * @param {any} str 
+ * @param {string} str 
  * @returns 
  */
 function trim (str) {
     str = str.replace(/(^(\s|\u00A0|\u0000)+)|((\s|\u00A0|\u0000)+$)/g, '');
-    for (var i = str.length - 1; i >= 0; i--) {
-        if (/\S/.test(str.charAt(i))) {
-            str = str.substring(0, i + 1);
-            break;
-        }
-    }
     return str;
 }
